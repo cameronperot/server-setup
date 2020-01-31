@@ -1,0 +1,9 @@
+*filter
+
+# Set default deny policy
+-P INPUT DROP
+-P FORWARD DROP
+-P OUTPUT DROP
+
+COMMIT
+
