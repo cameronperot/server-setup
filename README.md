@@ -14,3 +14,6 @@ Where:
 * `<IPTABLES_RULESET>` is one of `[standard, vpn]` depending on which iptables ruleset you would like to use.
 * `<DEV>` is `true` if you wish to install additional development packages, otherwise leave blank.
 
+## OpenVPN Installation
+
+See the subdirectory's [README](openvpn/README.md).
