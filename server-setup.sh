@@ -56,7 +56,7 @@ apt-get -y install \
 	unattended-upgrades \
 	apt-listchanges
 
-# Install packages for dev server
+# Install extra dev packages
 if [ "$2" == "true" ]; then
 	apt-get -y install \
 		libmariadbclient-dev \
@@ -66,10 +66,6 @@ if [ "$2" == "true" ]; then
 		postgresql \
 		postgresql-contrib
 fi
-
-# Copy server setup files from the root directory to the users home directory
-cp -r $setup_dir/python $home_dir
-chown -R $new_user:$new_user $home_dir/python
 
 # Configure unattended upgrades
 dpkg-reconfigure -plow unattended-upgrades
