@@ -8,7 +8,7 @@ if [ "$USER" != 'root' ]; then
 fi
 
 # Check that a valid ipruleset was provided
-if [[ !("$1" == "standard" || "$1" == "vpn") ]]; then
+if [[ ! ("$1" == "standard" || "$1" == "vpn") ]]; then
 	echo "Invalid iptables ruleset type provided (arg 1), valid options are: [standard, vpn]"
 	exit 1
 fi
@@ -87,9 +87,11 @@ cp $setup_dir/etc/ssh/*_config /etc/ssh/
 chmod 644 /etc/ssh/*_config
 
 # Disable ipv6
-echo "net.ipv6.conf.all.disable_ipv6 = 1" >> /etc/sysctl.conf
-echo "net.ipv6.conf.default.disable_ipv6 = 1" >> /etc/sysctl.conf
-echo "net.ipv6.conf.lo.disable_ipv6 = 1" >> /etc/sysctl.conf
+cat >> /etc/sysctl.conf <<EOT
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+EOT
 
 # Replace iptables rules and restart iptables/sshd
 touch /option.netfilter
