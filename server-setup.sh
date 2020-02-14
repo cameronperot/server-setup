@@ -1,8 +1,8 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -eu -o pipefail
 
 # Ensure script is run as root
-if [ "$USER" != 'root' ]; then
+if [ "$USER" != "root" ]; then
 	echo "You must run this script as root!"
 	exit 1
 fi
