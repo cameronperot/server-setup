@@ -75,7 +75,7 @@ ssh-keygen -t ed25519 -f ssh_host_ed25519_key < /dev/null
 ssh-keygen -t rsa -b 4096 -f ssh_host_rsa_key < /dev/null
 
 # Edit the moduli file to remove small primes
-awk '$5 > 2000' /etc/ssh/moduli > "${HOME}/moduli"
+awk '$5 > 3071' /etc/ssh/moduli > "${HOME}/moduli"
 wc -l "${HOME}/moduli"
 mv "${HOME}/moduli" /etc/ssh/moduli
 
