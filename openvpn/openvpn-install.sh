@@ -1,20 +1,23 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -eu -o pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd -P )"
 
 # Check if user has root priveleges
 if [ "$USER" != 'root' ]; then
-	echo "You must run this script as root!"
-	exit 1;
+    echo "You must run this script as root!"
+    exit 1;
 fi
 
 # Install the OpenVPN server
 apt-get update
 apt-get install -y \
-	openvpn \
-	easy-rsa
+    openvpn \
+    easy-rsa
 
 # Set up the directories, links, and account
-mkdir -p /etc/openvpn/easy-rsa/keys && cd /etc/openvpn/easy-rsa/
+mkdir -p /etc/openvpn/easy-rsa/keys
+cd /etc/openvpn/easy-rsa/
 cp -rf /usr/share/easy-rsa/* /etc/openvpn/easy-rsa
 ln -s openssl-1.0.0.cnf openssl.cnf
 
@@ -40,5 +43,6 @@ mkdir /etc/openvpn/ccd
 chown nobody:nogroup /etc/openvpn/ccd
 
 # Copy over the server config file
-cp $PWD/server.conf /etc/openvpn/server.conf
-cp $PWD/client.conf /etc/openvpn/client/client.conf
+cp $DIR/server.conf /etc/openvpn/server.conf
+mkdir -p /etc/openvpn/client
+cp $DIR/client.conf /etc/openvpn/client/client.conf

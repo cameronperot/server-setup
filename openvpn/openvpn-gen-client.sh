@@ -1,10 +1,12 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -eu -o pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd -P )"
 
 # Check if user has root priveleges
 if [ "$USER" != 'root' ]; then
-	echo "You must run this script as root!"
-	exit 1;
+    echo "You must run this script as root!"
+    exit 1;
 fi
 
 # Ask the user what to name the client
@@ -13,7 +15,9 @@ read newclient
 echo "Client will create files with the name $newclient"
 
 # Generate the client credentials
-cd /etc/openvpn/easy-rsa && ./easyrsa gen-req $newclient && ./easyrsa sign-req client $newclient
+cd /etc/openvpn/easy-rsa
+./easyrsa gen-req $newclient
+./easyrsa sign-req client $newclient
 
 # Compress the client credentials
 newclient_dir=/etc/openvpn/client/$newclient
