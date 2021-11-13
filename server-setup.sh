@@ -17,13 +17,13 @@ fi
 
 # Username, SSH keys, and location of user's home directory
 echo "What would you like the username to be?"
-read NEW_USER
+read -r NEW_USER
 SSH_KEY1="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOhUSbmv/3Q0vMYLdaNLGcBwvNpGKjLSeBdf/z+JETO1"
 HOME_DIR="/home/$NEW_USER"
 
 # Create the new user and add them to the sudo group
-adduser --gecos "" $NEW_USER
-usermod -a -G sudo $NEW_USER
+adduser --gecos "" "$NEW_USER"
+usermod -a -G sudo "$NEW_USER"
 
 # Aliases for the new user
 echo "alias ls='ls -lahF --color=always'" >> "$HOME_DIR/.bash_aliases"

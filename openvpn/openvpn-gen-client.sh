@@ -11,24 +11,24 @@ fi
 
 # Ask the user what to name the client
 echo "What would you like the client name to be (e.g. client1)"
-read newclient
-echo "Client will create files with the name $newclient"
+read -r NEW_CLIENT
+echo "Client will create files with the name $NEW_CLIENT"
 
 # Generate the client credentials
 cd /etc/openvpn/easy-rsa
-./easyrsa gen-req $newclient
-./easyrsa sign-req client $newclient
+./easyrsa gen-req "$NEW_CLIENT"
+./easyrsa sign-req client "$NEW_CLIENT"
 
 # Compress the client credentials
-newclient_dir=/etc/openvpn/client/$newclient
-mkdir $newclient_dir
-cp ./ta.key $newclient_dir/
-cp ./pki/ca.crt $newclient_dir/
-cp ./pki/issued/$newclient.crt $newclient_dir/client.crt
-cp ./pki/private/$newclient.key $newclient_dir/client.key
-cp /etc/openvpn/client/client.conf $newclient_dir/client.conf
-tar -C $newclient_dir -cvzf /etc/openvpn/client/$newclient.tgz {ca.crt,client.conf,client.crt,client.key,ta.key}
+NEW_CLIENT_DIR="/etc/openvpn/client/$NEW_CLIENT"
+mkdir "$NEW_CLIENT_DIR"
+cp ./ta.key "$NEW_CLIENT_DIR/"
+cp ./pki/ca.crt "$NEW_CLIENT_DIR/"
+cp "./pki/issued/$NEW_CLIENT.crt" "$NEW_CLIENT_DIR/client.crt"
+cp "./pki/private/$NEW_CLIENT.key" "$NEW_CLIENT_DIR/client.key"
+cp /etc/openvpn/client/client.conf "$NEW_CLIENT_DIR/client.conf"
+tar -C "$NEW_CLIENT_DIR" -cvzf "/etc/openvpn/client/$NEW_CLIENT.tgz" {ca.crt,client.conf,client.crt,client.key,ta.key}
 
 # Create the ccd file
-touch /etc/openvpn/ccd/$newclient
-sudo chmod 644 /etc/openvpn/ccd/$newclient
+touch "/etc/openvpn/ccd/$NEW_CLIENT"
+sudo chmod 644 "/etc/openvpn/ccd/$NEW_CLIENT"
