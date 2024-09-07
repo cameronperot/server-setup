@@ -1,19 +1,14 @@
 # Server Setup
 
 ## Usage
+Note: If you want to use this repository, you should change the `NEW_USER` and `SSH_KEY` variables in the `setup.sh` script before running.
 
-Before running the script you will want to change the `new_user`, `ssh_key1`, and `ssh_key2` variables in `server-setup.sh`. to your desired values.
-
+To run the setup script, first clone the repo, then change into it and run `setup.sh`:
 ```bash
 git clone https://github.com/cameronperot/server-setup.git
 cd server-setup
-./server-setup.sh <IPTABLES_RULESET> <DEV>
+./setup.sh
 ```
 
-Where:
-* `<IPTABLES_RULESET>` is one of `[standard, vpn]` depending on which iptables ruleset you would like to use.
-* `<DEV>` is `true` if you wish to install additional development packages, otherwise leave blank.
-
-## OpenVPN Installation
-
-See the subdirectory's [README](openvpn/README.md).
+### Additional Scripts
+The `scripts` directory of this repo contains additional scripts to install additional packages such as Docker, Podman, and Syncthing.
