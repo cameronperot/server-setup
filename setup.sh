@@ -70,8 +70,8 @@ wc -l "${HOME}/moduli"
 mv "${HOME}/moduli" /etc/ssh/moduli
 
 # configure ssh
-cp "$DIR/etc/issue.net" /etc/issue.net
-cp "$DIR/etc/ssh/*_config" /etc/ssh/
+cp "$DIR"/etc/issue.net /etc/issue.net
+cp "$DIR"/etc/ssh/*_config /etc/ssh/
 chmod 644 /etc/ssh/*_config
 systemctl restart sshd.service
 
