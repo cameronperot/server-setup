@@ -40,6 +40,7 @@ apt-get -y install \
     gnupg \
     htop \
     ncdu \
+    net-tools \
     nload \
     python3-dev \
     python3-pip \
