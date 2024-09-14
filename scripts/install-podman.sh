@@ -8,8 +8,8 @@ if [ "$USER" != "root" ]; then
 fi
 
 # install podman
-apt-get update
-apt-get -y install \
+apt update
+apt -y install \
     containers-storage \
     dbus-user-session \
     fuse-overlayfs \

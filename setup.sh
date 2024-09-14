@@ -24,9 +24,9 @@ chmod 600 "$HOME_DIR/.ssh/authorized_keys"
 chown -R "$NEW_USER:$NEW_USER" "$HOME_DIR/.ssh"
 
 # update and install packages
-apt-get update
-apt-get -y upgrade
-apt-get -y install \
+apt update
+apt -y upgrade
+apt -y install \
     apparmor \
     apt-listchanges \
     aptitude \
