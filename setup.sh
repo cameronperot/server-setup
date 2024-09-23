@@ -9,20 +9,6 @@ if [ "$USER" != "root" ]; then
     exit 1
 fi
 
-# add a new user with root privileges
-NEW_USER="user"
-SSH_KEY="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGhNW2T8Aj1MnjEpaNRqoMYm/jL10PI7igBx084GN0U5"
-HOME_DIR="/home/$NEW_USER"
-adduser --gecos "" "$NEW_USER"
-usermod -a -G sudo "$NEW_USER"
-
-# set up the new user's ~/.ssh directory and authorized_keys
-mkdir "$HOME_DIR/.ssh"
-chmod 700 "$HOME_DIR/.ssh"
-echo "$SSH_KEY" >>"$HOME_DIR/.ssh/authorized_keys"
-chmod 600 "$HOME_DIR/.ssh/authorized_keys"
-chown -R "$NEW_USER:$NEW_USER" "$HOME_DIR/.ssh"
-
 # update and install packages
 apt update
 apt -y upgrade
@@ -55,6 +41,20 @@ apt -y install \
     vim \
     wireguard \
     zsh
+
+# add a new user with root privileges
+NEW_USER="user"
+SSH_KEY="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGhNW2T8Aj1MnjEpaNRqoMYm/jL10PI7igBx084GN0U5"
+HOME_DIR="/home/$NEW_USER"
+adduser --gecos "" "$NEW_USER"
+/usr/sbin/usermod -a -G sudo "$NEW_USER"
+
+# set up the new user's ~/.ssh directory and authorized_keys
+mkdir "$HOME_DIR/.ssh"
+chmod 700 "$HOME_DIR/.ssh"
+echo "$SSH_KEY" >>"$HOME_DIR/.ssh/authorized_keys"
+chmod 600 "$HOME_DIR/.ssh/authorized_keys"
+chown -R "$NEW_USER:$NEW_USER" "$HOME_DIR/.ssh"
 
 # configure unattended upgrades
 dpkg-reconfigure -plow unattended-upgrades
