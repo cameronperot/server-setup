@@ -21,15 +21,18 @@ apt -y install \
     ca-certificates \
     curl \
     fail2ban \
+    fd-find \
     fuse-overlayfs \
     git \
     gnupg \
     htop \
+    lsd \
     ncdu \
     net-tools \
     nload \
     python3-dev \
     python3-pip \
+    ripgrep \
     rsync \
     shellcheck \
     shfmt \
