@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 set -eu -o pipefail
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 
-# ensure script is run as root
-if [ "$USER" != "root" ]; then
+# Ensure script is run as root
+if [ "${USER}" != "root" ]; then
     echo "You must run this script as root!"
     exit 1
 fi
 
-# update and install packages
+# Update and install packages
 apt update
 apt -y upgrade
 apt -y install \
@@ -20,14 +20,19 @@ apt -y install \
     build-essential \
     ca-certificates \
     curl \
+    cmake \
+    dnsutils \
     fail2ban \
     fd-find \
     fuse-overlayfs \
+    fzf \
     git \
     gnupg \
     htop \
+    libfuse2 \
     lsd \
     ncdu \
+    neovim \
     net-tools \
     nload \
     python3-dev \
@@ -41,45 +46,44 @@ apt -y install \
     tmux \
     ufw \
     unattended-upgrades \
-    vim \
     wireguard \
     zsh
 
-# add a new user with root privileges
+# Add a new user with root privileges
 NEW_USER="user"
 SSH_KEY="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGhNW2T8Aj1MnjEpaNRqoMYm/jL10PI7igBx084GN0U5"
-HOME_DIR="/home/$NEW_USER"
-adduser --gecos "" "$NEW_USER"
-/usr/sbin/usermod -a -G sudo "$NEW_USER"
+HOME_DIR="/home/${NEW_USER}"
+adduser --gecos "" "${NEW_USER}"
+/usr/sbin/usermod -a -G sudo "${NEW_USER}"
 
-# set up the new user's ~/.ssh directory and authorized_keys
-mkdir "$HOME_DIR/.ssh"
-chmod 700 "$HOME_DIR/.ssh"
-echo "$SSH_KEY" >>"$HOME_DIR/.ssh/authorized_keys"
-chmod 600 "$HOME_DIR/.ssh/authorized_keys"
-chown -R "$NEW_USER:$NEW_USER" "$HOME_DIR/.ssh"
+# Set up the new user's ~/.ssh directory and authorized_keys
+mkdir "${HOME_DIR}/.ssh"
+chmod 700 "${HOME_DIR}/.ssh"
+echo "$SSH_KEY" >>"${HOME_DIR}/.ssh/authorized_keys"
+chmod 600 "${HOME_DIR}/.ssh/authorized_keys"
+chown -R "${NEW_USER}:${NEW_USER}" "${HOME_DIR}/.ssh"
 
-# configure unattended upgrades
+# Configure unattended upgrades
 dpkg-reconfigure -plow unattended-upgrades
 
-# generate server SSH keys (ed25519 and 4096-bit RSA)
+# Generate server SSH keys (ed25519 and 4096-bit RSA)
 cd /etc/ssh
 rm ssh_host_*key*
 ssh-keygen -t ed25519 -f ssh_host_ed25519_key </dev/null
 ssh-keygen -t rsa -b 4096 -f ssh_host_rsa_key </dev/null
 
-# edit the moduli file to remove small primes
+# Edit the moduli file to remove small primes
 awk '$5 > 3071' /etc/ssh/moduli >"${HOME}/moduli"
 wc -l "${HOME}/moduli"
 mv "${HOME}/moduli" /etc/ssh/moduli
 
-# configure ssh
-cp "$DIR"/etc/issue.net /etc/issue.net
-cp "$DIR"/etc/ssh/*_config /etc/ssh/
+# Configure SSH
+cp "${SCRIPT_DIR}/etc/issue.net" /etc/issue.net
+cp "${SCRIPT_DIR}/etc/ssh/*_config" /etc/ssh/
 chmod 644 /etc/ssh/*_config
 systemctl restart sshd.service
 
-# configure ufw
+# Configure UFW
 ufw default deny incoming
 ufw default allow outgoing
 ufw allow ssh
