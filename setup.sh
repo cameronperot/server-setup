@@ -46,6 +46,7 @@ apt -y install \
     tmux \
     ufw \
     unattended-upgrades \
+    unzip \
     wireguard \
     zsh
 
