@@ -79,7 +79,7 @@ mv "${HOME}/moduli" /etc/ssh/moduli
 
 # Configure SSH
 cp "${SCRIPT_DIR}/etc/issue.net" /etc/issue.net
-cp "${SCRIPT_DIR}/etc/ssh/*_config" /etc/ssh/
+rsync -rv "${SCRIPT_DIR}/etc/ssh" /etc/
 chmod 644 /etc/ssh/*_config
 systemctl restart sshd.service
 
