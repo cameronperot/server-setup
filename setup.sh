@@ -29,6 +29,7 @@ apt -y install \
     git \
     gnupg \
     htop \
+    libclang-dev \
     libfuse2 \
     lsd \
     ncdu \
