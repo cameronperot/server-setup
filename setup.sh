@@ -31,6 +31,7 @@ apt -y install \
     htop \
     libclang-dev \
     libfuse2 \
+    libnss-myhostname \
     lsd \
     ncdu \
     neovim \
