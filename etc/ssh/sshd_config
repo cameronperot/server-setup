@@ -11,7 +11,7 @@ LoginGraceTime 120
 PermitRootLogin no
 StrictModes yes
 PubkeyAuthentication yes
-AuthorizedKeysFile	%h/.ssh/authorized_keys
+AuthorizedKeysFile %h/.ssh/authorized_keys
 PermitEmptyPasswords no
 IgnoreRhosts yes
 HostbasedAuthentication no

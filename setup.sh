@@ -15,6 +15,7 @@ apt -y upgrade
 apt -y install \
     apparmor \
     apt-listchanges \
+    apt-transport-https \
     aptitude \
     btop \
     build-essential \
@@ -51,6 +52,11 @@ apt -y install \
     unzip \
     wireguard \
     zsh
+
+# Configure Debian sources to use the new format (deb822)
+rsync -rv "${SCRIPT_DIR}/etc/apt/" /etc/apt/
+rm /etc/apt/sources.list
+apt update
 
 # Add a new user with root privileges
 NEW_USER="user"
