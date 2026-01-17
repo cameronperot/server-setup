@@ -40,6 +40,8 @@ apt -y install \
     nload \
     python3-dev \
     python3-pip \
+    rclone \
+    restic \
     ripgrep \
     rsync \
     shellcheck \
