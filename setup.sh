@@ -57,7 +57,7 @@ apt -y install \
 
 # Configure Debian sources to use the new format (deb822)
 rsync -rv "${SCRIPT_DIR}/etc/apt/" /etc/apt/
-rm /etc/apt/sources.list
+rm -f /etc/apt/sources.list
 apt update
 
 # Add a new user with root privileges
