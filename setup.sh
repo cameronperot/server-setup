@@ -20,8 +20,8 @@ apt -y install \
     btop \
     build-essential \
     ca-certificates \
-    curl \
     cmake \
+    curl \
     dnsutils \
     fail2ban \
     fd-find \
@@ -30,6 +30,8 @@ apt -y install \
     git \
     gnupg \
     htop \
+    iproute2 \
+    iputils-ping \
     libclang-dev \
     libfuse2 \
     libnss-myhostname \
@@ -37,6 +39,7 @@ apt -y install \
     ncdu \
     neovim \
     net-tools \
+    netcat-openbsd \
     nload \
     python3-dev \
     python3-pip \
