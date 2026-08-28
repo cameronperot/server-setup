@@ -4,10 +4,14 @@ set -eu -o pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 
 # Ensure script is run as root
-if [ "${USER}" != "root" ]; then
+if [ "${EUID}" -ne 0 ]; then
     echo "You must run this script as root!"
     exit 1
 fi
+
+# The user to create and the SSH public key
+NEW_USER="user"
+SSH_KEY="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGhNW2T8Aj1MnjEpaNRqoMYm/jL10PI7igBx084GN0U5"
 
 # Update and install packages
 apt update
@@ -58,43 +62,61 @@ apt -y install \
     wireguard \
     zsh
 
+# Back up files that are replaced below
+BACKUP_DIR="/var/backups/server-setup/$(date +%Y%m%d-%H%M%S)"
+mkdir -p "${BACKUP_DIR}"
+
 # Configure Debian sources to use the new format (deb822)
+if [ -f /etc/apt/sources.list ]; then
+    cp -a /etc/apt/sources.list "${BACKUP_DIR}/"
+fi
 rsync -rv "${SCRIPT_DIR}/etc/apt/" /etc/apt/
 rm -f /etc/apt/sources.list
-apt update
+apt-get update
 
-# Add a new user with root privileges
-NEW_USER="user"
-SSH_KEY="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGhNW2T8Aj1MnjEpaNRqoMYm/jL10PI7igBx084GN0U5"
+# Add a new user with root privileges (the password prompt sets the sudo password)
 HOME_DIR="/home/${NEW_USER}"
-adduser --gecos "" "${NEW_USER}"
-/usr/sbin/usermod -a -G sudo "${NEW_USER}"
+if ! id -u "${NEW_USER}" >/dev/null 2>&1; then
+    adduser --gecos "" "${NEW_USER}"
+fi
+usermod -a -G sudo "${NEW_USER}"
+
+# Group allowed to SSH in (matches AllowGroups in sshd_config)
+groupadd -f ssh-users
+usermod -a -G ssh-users "${NEW_USER}"
 
 # Set up the new user's ~/.ssh directory and authorized_keys
-mkdir "${HOME_DIR}/.ssh"
+mkdir -p "${HOME_DIR}/.ssh"
 chmod 700 "${HOME_DIR}/.ssh"
-echo "$SSH_KEY" >>"${HOME_DIR}/.ssh/authorized_keys"
+touch "${HOME_DIR}/.ssh/authorized_keys"
+if ! grep -qxF "${SSH_KEY}" "${HOME_DIR}/.ssh/authorized_keys"; then
+    echo "${SSH_KEY}" >>"${HOME_DIR}/.ssh/authorized_keys"
+fi
 chmod 600 "${HOME_DIR}/.ssh/authorized_keys"
 chown -R "${NEW_USER}:${NEW_USER}" "${HOME_DIR}/.ssh"
 
 # Configure unattended upgrades
 dpkg-reconfigure -plow unattended-upgrades
 
-# Generate server SSH keys (ed25519 and 4096-bit RSA)
-cd /etc/ssh
-rm ssh_host_*key*
-ssh-keygen -t ed25519 -f ssh_host_ed25519_key </dev/null
-ssh-keygen -t rsa -b 4096 -f ssh_host_rsa_key </dev/null
+# Back up the current SSH configuration and host keys
+cp -a /etc/ssh "${BACKUP_DIR}/ssh"
 
-# Edit the moduli file to remove small primes
-awk '$5 > 3071' /etc/ssh/moduli >"${HOME}/moduli"
-wc -l "${HOME}/moduli"
-mv "${HOME}/moduli" /etc/ssh/moduli
+# Generate server SSH host key (ed25519); regenerating invalidates
+# clients' known_hosts
+read -r -p "Regenerate SSH host key? [Y/n] " reply || reply=""
+case "${reply}" in
+[nN]*) ;;
+*)
+    rm -f /etc/ssh/ssh_host_*key*
+    ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key </dev/null
+    ;;
+esac
 
 # Configure SSH
 cp "${SCRIPT_DIR}/etc/issue.net" /etc/issue.net
 rsync -rv "${SCRIPT_DIR}/etc/ssh" /etc/
 chmod 644 /etc/ssh/*_config
+sshd -t
 systemctl restart sshd.service
 
 # Configure UFW
