@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
 set -eu -o pipefail
 
-# ensure script is run as root
-if [ "$USER" != "root" ]; then
-    echo "You must run this script as root!"
+# Ensure script is run as root
+if [ "$EUID" -ne 0 ]; then
+    echo "You must run this script as root!" >&2
     exit 1
 fi
 
-# install podman
+# Install Podman and modern rootless/runtime stack
 apt update
-apt -y install \
-    containers-storage \
+apt install -y \
+    crun \
     dbus-user-session \
     fuse-overlayfs \
+    passt \
     podman \
-    slirp4netns \
     uidmap
+
+echo "Podman installed successfully!"
