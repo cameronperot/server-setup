@@ -44,6 +44,7 @@ apt -y install \
     neovim \
     net-tools \
     netcat-openbsd \
+    network-manager \
     nload \
     python3-dev \
     python3-pip \
