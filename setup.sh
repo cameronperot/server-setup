@@ -20,47 +20,60 @@ apt -y install \
     apparmor \
     apt-listchanges \
     apt-transport-https \
-    aptitude \
+    bat \
     btop \
     build-essential \
+    bzip2 \
     ca-certificates \
     cmake \
     curl \
-    dnsutils \
+    bind9-dnsutils \
     fail2ban \
     fd-find \
     fuse-overlayfs \
     fzf \
+    gh \
     git \
-    gnupg \
+    git-delta \
+    gnupg2 \
     htop \
     iproute2 \
     iputils-ping \
+    jq \
     libclang-dev \
-    libfuse2 \
+    libfuse2t64 \
+    libglib2.0-0t64 \
     libnss-myhostname \
     lsd \
+    lsof \
+    mtr-tiny \
     ncdu \
     neovim \
-    net-tools \
+    netbase \
     netcat-openbsd \
     network-manager \
     nload \
+    openssh-client \
+    pkg-config \
+    procps \
     python3-dev \
-    python3-pip \
     rclone \
     restic \
     ripgrep \
     rsync \
+    sd \
     shellcheck \
     shfmt \
     smem \
+    strace \
     sudo \
     tmux \
     ufw \
     unattended-upgrades \
     unzip \
+    wget \
     wireguard \
+    yq \
     zsh
 
 # Back up files that are replaced below
