@@ -38,8 +38,8 @@ AllowGroups ssh-users
 # --- Forwarding & Tunneling Lockdown ---
 # Set to 'yes' / 'local' only if this host is a bastion / jump host
 X11Forwarding no
-AllowAgentForwarding no
-AllowTcpForwarding no
+AllowAgentForwarding yes
+AllowTcpForwarding yes
 PermitTunnel no
 GatewayPorts no
 
