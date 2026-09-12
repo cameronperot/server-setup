@@ -51,7 +51,6 @@ apt -y install \
     neovim \
     netbase \
     netcat-openbsd \
-    network-manager \
     nload \
     openssh-client \
     pkg-config \
@@ -67,6 +66,7 @@ apt -y install \
     smem \
     strace \
     sudo \
+    systemd-resolved \
     tmux \
     ufw \
     unattended-upgrades \
